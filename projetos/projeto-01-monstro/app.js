@@ -1,6 +1,9 @@
 new Vue({
 	el: '#app',
 	data: {
+		gameFinished: true,
+		playerLife: 100,
+		monsterLife: 100,
 		logs: [
 			{
 				type: 'attack',
