@@ -31,7 +31,7 @@
         <div v-else class="panel buttons">
             <template v-if="playing">
                 <button @click="attack('normal')" class="btn attack">Ataque</button>
-                <button @click="attack('special')" class="btn especial-attack">Ataque Especial</button>
+                <button :disabled='!specialAttachEnable' @click="attack('special')" class="btn especial-attack">Ataque Especial</button>
                 <button @click="heal()" class="btn heal">Curar</button>
                 <button @click="abortGame()" class="btn give-up">Desistir</button>
             </template>

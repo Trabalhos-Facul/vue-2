@@ -5,6 +5,10 @@ new Vue({
 		gameFinished: false,
 		playerLife: 100,
 		monsterLife: 100,
+		specialAttachEnable: true,
+		specialCoolDown: 3,
+		specialCoolDownCount: 0,
+		round: 0,
 		logs: [],
 	},
 	methods: {
@@ -14,10 +18,12 @@ new Vue({
 			this.playerLife = 100;
 			this.monsterLife = 100;
 			this.logs = [];
+			this.round = 0;
 
 			this.playing = false;
 		},
 		attack(mode) {
+			if (mode == 'special') this.specialAttachEnable = false;
 			const maxAttack = 10;
 			const normalAttack = Math.floor(Math.random() * maxAttack)
 
@@ -34,6 +40,8 @@ new Vue({
 
 			this.playerLife -= monsterAttack
 			this.logAttack('MONSTRO', monsterAttack);
+
+			this.round++
 		},
 		logAttack(from, value) {
 			const target = from == 'JOGADOR' ? 'MONSTRO' : 'JOGADOR';
@@ -52,15 +60,14 @@ new Vue({
 			const monsterAttack = Math.floor(Math.random() * maxPoints)
 
 			let healPoints = Math.floor(Math.random() * maxPoints)
-			const healPoints2 = Math.floor(Math.random() * maxPoints)
-
-			healPoints = healPoints > healPoints2 ? healPoints : healPoints2;
 
 			this.playerLife += healPoints
 			this.logHeal(healPoints)
 
 			this.playerLife -= monsterAttack
 			this.logAttack('MONSTRO', monsterAttack);
+
+			this.round++
 		},
 		logHeal(value) {
 			const newLog = {
@@ -72,10 +79,20 @@ new Vue({
 	},
 	watch: {
 		playerLife(newValue) {
-			if (newValue <= 0) this.gameFinished = true
+			if (newValue <= 0){ this.gameFinished = true
+			}else if(newValue > 100) this.playerLife = 100
 		},
 		monsterLife(newValue) {
-			if (newValue <= 0) this.gameFinished = true
+			if (newValue <= 0){
+				this.monsterLife = 0
+				this.gameFinished = true
+			}
+		},
+		round(){
+			if (this.specialCoolDownCount == this.specialCoolDown) {
+				this.specialCoolDownCount = 0
+				this.specialAttachEnable = true
+			} else this.specialCoolDownCount++
 		}
 	},
 })
