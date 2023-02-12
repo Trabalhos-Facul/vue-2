@@ -8,7 +8,6 @@ new Vue({
 		specialAttachEnable: true,
 		specialCoolDown: 3,
 		specialCoolDownCount: 0,
-		round: 0,
 		logs: [],
 	},
 	methods: {
@@ -17,6 +16,8 @@ new Vue({
 			this.gameFinished = false;
 			this.playerLife = 100;
 			this.monsterLife = 100;
+			this.specialAttachEnable = true;
+			this.specialCoolDownCount = 0;
 			this.logs = [];
 			this.round = 0;
 
@@ -45,13 +46,15 @@ new Vue({
 		},
 		logAttack(from, value) {
 			const target = from == 'JOGADOR' ? 'MONSTRO' : 'JOGADOR';
+			const fromPlayer = from == 'JOGADOR'
 
 			const newLog = {
 				type: 'attack',
-				fromPlayer: from == 'JOGADOR',
+				fromPlayer: fromPlayer,
 				value: value,
 				from: from,
-				target: target
+				target: target,
+				resultTargetLife: target == 'JOGADOR'? this.playerLife : this.monsterLife
 			}
 			this.logs.unshift(newLog)
 		},
@@ -73,14 +76,21 @@ new Vue({
 			const newLog = {
 				type: 'heal',
 				value: value,
+				currentLife: this.playerLife
 			}
 			this.logs.unshift(newLog)
 		}
 	},
 	watch: {
-		playerLife(newValue) {
-			if (newValue <= 0){ this.gameFinished = true
+		playerLife(newValue, oldValue) {
+			if (newValue <= 0){
+				this.playerLife = 0
+				this.gameFinished = true
 			}else if(newValue > 100) this.playerLife = 100
+			if (this.specialCoolDownCount >= this.specialCoolDown) {
+				this.specialCoolDownCount = 0
+				this.specialAttachEnable = true
+			} else if ( newValue <= oldValue) this.specialCoolDownCount++
 		},
 		monsterLife(newValue) {
 			if (newValue <= 0){
@@ -88,11 +98,5 @@ new Vue({
 				this.gameFinished = true
 			}
 		},
-		round(){
-			if (this.specialCoolDownCount == this.specialCoolDown) {
-				this.specialCoolDownCount = 0
-				this.specialAttachEnable = true
-			} else this.specialCoolDownCount++
-		}
 	},
 })

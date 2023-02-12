@@ -12,14 +12,14 @@
             <div class="score">
                 <h1>Jogador</h1>
                 <div class="life-bar">
-                    <div class="life" :style="{width: playerLife + '%'}"></div>
+                    <div class="life" :class="{danger: playerLife < 20}" :style="{width: playerLife + '%'}"></div>
                 </div>
                 <div> {{playerLife}}%</div>
             </div>
             <div class="score">
                 <h1>Monstro</h1>
                 <div class="life-bar">
-                    <div class="life" :style="{width: monsterLife + '%'}"></div>
+                    <div class="life" :class="{danger: monsterLife < 20}" :style="{width: monsterLife + '%'}"></div>
                 </div>
                 <div> {{monsterLife}}%</div>
             </div>
@@ -41,10 +41,10 @@
             <ul>
                 <template v-for="action in logs" >
                     <li v-if="action.type == 'attack'" :class="{player: action.fromPlayer, monster: !action.fromPlayer}">
-                        {{action.from}} ATINGIU {{action.target}} COM {{action.value}}
+                        {{action.from}} ATINGIU {{action.target}} COM {{action.value}} ({{action.resultTargetLife}})
                     </li>
                     <li v-if="action.type == 'heal'" class="heal">
-                        JOGADOR SE CUROU EM {{action.value}}
+                        JOGADOR SE CUROU EM {{action.value}} ({{action.currentLife}})
                     </li>
                 </template>
             </ul>
