@@ -19,7 +19,6 @@ new Vue({
 			this.specialAttachEnable = true;
 			this.specialCoolDownCount = 0;
 			this.logs = [];
-			this.round = 0;
 
 			this.playing = false;
 		},
@@ -42,8 +41,6 @@ new Vue({
 
 			this.playerLife -= monsterAttack
 			this.logAttack('MONSTRO', monsterAttack);
-
-			this.round++
 		},
 		logAttack(from, value) {
 			const target = from == 'JOGADOR' ? 'MONSTRO' : 'JOGADOR';
@@ -70,8 +67,6 @@ new Vue({
 
 			this.playerLife -= monsterAttack
 			this.logAttack('MONSTRO', monsterAttack);
-
-			this.round++
 		},
 		logHeal(value) {
 			const newLog = {
