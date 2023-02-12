@@ -25,13 +25,14 @@ new Vue({
 		},
 		attack(mode) {
 			if (mode == 'special') this.specialAttachEnable = false;
+
 			const maxAttack = 10;
 			const normalAttack = Math.floor(Math.random() * maxAttack)
 
 			let disadvantage = Math.floor(Math.random() * maxAttack)
 			const disadvantage2 = Math.floor(Math.random() * maxAttack)
 
-			disadvantage = disadvantage < disadvantage2 ? disadvantage : disadvantage2
+			disadvantage = Math.min(disadvantage, disadvantage2)
 
 			const playerAttack = mode == 'normal' ? disadvantage : normalAttack;
 			const monsterAttack = mode == 'normal' ? normalAttack : disadvantage;
